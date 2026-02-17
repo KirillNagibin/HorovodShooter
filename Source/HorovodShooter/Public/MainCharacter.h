@@ -64,19 +64,15 @@ public:
 	TObjectPtr<UInputAction> FireAction;
 
 	// --- DASH SETTINGS ---
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Dash", meta = (ClampMin = "0.0"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "MovementFeel|Dash", meta = (ClampMin = "0.0"))
 	float DashForce = 4000.0f;
-	
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Dash", meta = (ClampMin = "0.0"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "MovementFeel|Dash", meta = (ClampMin = "0.0"))
 	float DashDuration = 0.2f;
-	
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Dash", meta = (ClampMin = "0.0"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "MovementFeel|Dash", meta = (ClampMin = "0.0"))
 	float DashCooldown = 1.0f;
-
-	UPROPERTY(BlueprintReadWrite, Category = "Dash")
+	UPROPERTY(BlueprintReadWrite, Category = "MovementFeel|Dash")
 	bool bCanDash = true;
 	
-	bool bIsDead = false;
 	
 	//Настройки качания головой
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "MovementFeel|Audio")
@@ -86,7 +82,10 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "MovementFeel|Audio")
 	TObjectPtr<USoundBase> LandSound;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "MovementFeel|Audio")
+	TObjectPtr<USoundBase> DashSound;;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "MovementFeel|Audio")
 	TSubclassOf<UCameraShakeBase> LandCameraShake;
+	
 
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MovementFeel|HeadBob")
@@ -94,7 +93,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MovementFeel|HeadBob")
 	float BobAmplitude = 1.f;
 	
-	
+	bool bIsDead = false;
 private:
 
 	FVector DefaultCameraLocation;

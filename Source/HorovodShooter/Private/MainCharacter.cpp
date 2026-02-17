@@ -196,6 +196,10 @@ void AMainCharacter::Dash(const FInputActionValue& Value)
 	
 	LaunchCharacter(DashDirection * DashForce, true, true);
 	
+	if (DashSound)
+	{
+		UGameplayStatics::PlaySoundAtLocation(this, DashSound, GetActorLocation());
+	}
 	bCanDash = false;
 	
 	if (UWorld* World = GetWorld())
