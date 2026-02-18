@@ -53,6 +53,11 @@ UE_LOG(LogHorovod, Warning, TEXT("[WEAPON DEBUG] OnUsePressed Called. CurrentAmm
 	{
 		UE_LOG(LogHorovod, Warning, TEXT("No ammo left, throwing weapon"));
 		bIsArmedToExplode = true;
+		float GlobalTime = UGameplayStatics::GetGlobalTimeDilation(this);
+		if (GlobalTime < 1.0f)
+		{
+			this->CustomTimeDilation = 1.0f / GlobalTime ;
+		}
 	}
 	return true;
 }

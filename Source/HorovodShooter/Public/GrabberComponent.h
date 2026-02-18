@@ -19,6 +19,8 @@ public:
 	// Sets default values for this component's properties
 	UGrabberComponent();
 
+	UPROPERTY()
+	TObjectPtr<UPrimitiveComponent> HeldComponent = nullptr;
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
@@ -45,8 +47,7 @@ protected:
 	UPROPERTY()
 	TObjectPtr<UPhysicsHandleComponent> PhysicsHandle;
 	
-	UPROPERTY()
-	TObjectPtr<UPrimitiveComponent> HeldComponent = nullptr;
+
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Settings")
 	float MaxGrabDistance = 400.f;

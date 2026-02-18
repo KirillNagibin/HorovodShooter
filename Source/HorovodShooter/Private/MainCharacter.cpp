@@ -73,7 +73,7 @@ void AMainCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 		EnhancedInputComponent->BindAction(DashAction, ETriggerEvent::Started, this, &AMainCharacter::Dash);
 		EnhancedInputComponent->BindAction(FireAction, ETriggerEvent::Started, this, &AMainCharacter::OnPrimaryAction);
 		
-		EnhancedInputComponent->BindAction(ToggleTimeDilationAction, ETriggerEvent::Started, this, &AMainCharacter::ToggleTimeDilation);
+		//EnhancedInputComponent->BindAction(ToggleTimeDilationAction, ETriggerEvent::Started, this, &AMainCharacter::ToggleTimeDilation);
 	}
 }
 
@@ -123,6 +123,7 @@ void AMainCharacter::ToggleTimeDilation(const FInputActionValue& Value)
 	{
 		UGameplayStatics::SetGlobalTimeDilation(World, bIsTimeDilated ? 1.0f : 0.01f);
 		bIsTimeDilated = !bIsTimeDilated;
+		this->CustomTimeDilation = 1.0f;
 	}
 }
 

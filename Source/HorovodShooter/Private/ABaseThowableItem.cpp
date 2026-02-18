@@ -6,6 +6,7 @@
 #include "DamagableInterface.h"
 #include "Components/StaticMeshComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
+#include "Kismet/GameplayStatics.h"
 
 static const FName COLLISION_PHYSICS(TEXT("PhysicsActor"));
 static const FName COLLISION_BLOCK_ALL(TEXT("BlockAll"));
@@ -129,6 +130,7 @@ void AABaseThowableItem::SetState(EThrowableState NewState)
 		
 		ProjectileMovement->OnProjectileBounce.AddDynamic(this, &AABaseThowableItem::OnProjectileBounce);
 		ProjectileMovement->OnProjectileStop.AddDynamic(this, &AABaseThowableItem::OnProjectileStop);
+		
 		break;
 	case EThrowableState::Impact:
 		ProjectileMovement->Deactivate();
