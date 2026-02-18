@@ -72,7 +72,8 @@ public:
 	float DashCooldown = 1.0f;
 	UPROPERTY(BlueprintReadWrite, Category = "MovementFeel|Dash")
 	bool bCanDash = true;
-	
+	UFUNCTION(BlueprintImplementableEvent, Category = "MovementFeel|Dash")
+	void OnDashStart();
 	
 	//Настройки качания головой
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "MovementFeel|Audio")

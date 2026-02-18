@@ -195,7 +195,7 @@ void AMainCharacter::Dash(const FInputActionValue& Value)
 	}
 	
 	LaunchCharacter(DashDirection * DashForce, true, true);
-	
+	OnDashStart();
 	if (DashSound)
 	{
 		UGameplayStatics::PlaySoundAtLocation(this, DashSound, GetActorLocation());
