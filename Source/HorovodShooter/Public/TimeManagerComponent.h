@@ -26,6 +26,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Time Manipulation")
 	void ApplyTimeDilation(float NewGlobalTime);
 
+	UPROPERTY(BlueprintReadWrite, Category = "Time Manipulation")
+	bool bIsTimeDilation = false;
+	
 	UPROPERTY(BlueprintAssignable, Category = "TimeManipulation")
 	FOnTimeChangedSignature OnTimeChanged;
 		
