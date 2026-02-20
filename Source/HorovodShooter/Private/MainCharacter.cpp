@@ -112,8 +112,6 @@ void AMainCharacter::ResetCharacterState()
 	GetCharacterMovement()->SetMovementMode(MOVE_Walking);
 	GetCharacterMovement()->Velocity = FVector::ZeroVector;
 	
-	// Сбрасываем дэш, если умерли в кд
-	ResetDash(); 
 	StopDashing(); // Возвращаем трение на место
 }
 
@@ -130,7 +128,6 @@ void AMainCharacter::ToggleTimeDilation(const FInputActionValue& Value)
 void AMainCharacter::ProcessMovementEffects(float DeltaTime)
 {
 	if (!bEnableHeadBob || !FirstPersonCamera) {return;}
-	if (!bCanDash) return;
 	
 	float Speed = GetVelocity().Size2D();
 	bool bIsMoving = Speed > 10.f && GetCharacterMovement()->IsMovingOnGround();
@@ -193,9 +190,12 @@ void AMainCharacter::Look(const FInputActionValue& Value)
 }
 
 void AMainCharacter::Dash(const FInputActionValue& Value)
-{
-	if (!bCanDash) return;
-	
+{	
+	float CurrentRealTime = GetWorld()->GetRealTimeSeconds();
+	if (CurrentRealTime - LastDashRealTime < DashCooldown)
+	{
+		return;
+	}
 	// Убираем трение для скольжения
 	GetCharacterMovement()->GroundFriction = 0.0f;
 	GetCharacterMovement()->BrakingDecelerationWalking = 0.0f;
@@ -212,15 +212,15 @@ void AMainCharacter::Dash(const FInputActionValue& Value)
 	{
 		UGameplayStatics::PlaySoundAtLocation(this, DashSound, GetActorLocation());
 	}
-	bCanDash = false;
 	
 	if (UWorld* World = GetWorld())
 	{
-		// Таймер остановки скольжения (Длительность Дэша)
-		World->GetTimerManager().SetTimer(DashDurationTimer, this, &AMainCharacter::StopDashing, DashDuration, false);
+		float CurrentTimeDilation = UGameplayStatics::GetGlobalTimeDilation(this);
+		float AdjustedDuration = DashDuration * CurrentTimeDilation;
 		
-		// Таймер перезарядки (Кулдаун)
-		World->GetTimerManager().SetTimer(DashTimerHandle, this, &AMainCharacter::ResetDash, DashCooldown, false);
+		// Таймер остановки скольжения (Длительность Дэша)
+		World->GetTimerManager().SetTimer(DashDurationTimer, this, &AMainCharacter::StopDashing, AdjustedDuration, false);
+		
 	}
 }
 
@@ -231,10 +231,7 @@ void AMainCharacter::StopDashing()
 	GetCharacterMovement()->BrakingDecelerationWalking = DefaultBrakingDeceleration;
 }
 
-void AMainCharacter::ResetDash()
-{
-	bCanDash = true;
-}
+
 
 void AMainCharacter::OnPrimaryAction()
 {
@@ -252,7 +249,6 @@ void AMainCharacter::Landed(const FHitResult& Hit)
 	if (GetVelocity().Z <= -1000.f)
 	{
 		UGameplayStatics::PlaySoundAtLocation(this, LandSound, Hit.Location);
-	
 		if (LandCameraShake)
 		{
 			if (APlayerController* PC = Cast<APlayerController>(Controller))

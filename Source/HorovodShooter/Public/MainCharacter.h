@@ -38,6 +38,8 @@ public:
 	// Событие для Блюпринтов (Звуки, Партиклы смерти)
 	UFUNCTION(BlueprintImplementableEvent, Category = "Health")
 	void OnPlayerDied();
+	UFUNCTION(BlueprintImplementableEvent, Category = "Dash")
+	void OnDashStart();
 
 	// --- COMPONENTS ---
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera")
@@ -72,8 +74,7 @@ public:
 	float DashDuration = 0.2f;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "MovementFeel|Dash", meta = (ClampMin = "0.0"))
 	float DashCooldown = 1.0f;
-	UPROPERTY(BlueprintReadWrite, Category = "MovementFeel|Dash")
-	bool bCanDash = true;
+	
 	
 	
 	//TimeDilation
@@ -107,8 +108,9 @@ private:
 	
 	
 protected:
+	
+	float LastDashRealTime = -100.f;
 	// Таймеры Дэша
-	FTimerHandle DashTimerHandle;     // Кулдаун
 	FTimerHandle DashDurationTimer;   // Время скольжения
 
 	// Переменные для хранения дефолтного трения
@@ -125,7 +127,6 @@ protected:
 	
 	// Вспомогательные функции Дэша
 	void StopDashing();
-	void ResetDash();
 	void OnPrimaryAction();
 	
 	virtual void Landed(const FHitResult& Hit) override;
