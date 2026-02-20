@@ -212,7 +212,7 @@ void AMainCharacter::Dash(const FInputActionValue& Value)
 	{
 		UGameplayStatics::PlaySoundAtLocation(this, DashSound, GetActorLocation());
 	}
-	
+	LastDashRealTime = CurrentRealTime;
 	if (UWorld* World = GetWorld())
 	{
 		float CurrentTimeDilation = UGameplayStatics::GetGlobalTimeDilation(this);
@@ -220,8 +220,8 @@ void AMainCharacter::Dash(const FInputActionValue& Value)
 		
 		// Таймер остановки скольжения (Длительность Дэша)
 		World->GetTimerManager().SetTimer(DashDurationTimer, this, &AMainCharacter::StopDashing, AdjustedDuration, false);
-		
 	}
+	OnDashStart();
 }
 
 void AMainCharacter::StopDashing()
