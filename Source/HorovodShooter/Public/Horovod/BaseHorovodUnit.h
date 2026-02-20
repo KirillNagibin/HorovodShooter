@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameplayTagContainer.h"
-#include "DamagableInterface.h"
+#include "Interfaces/DamagableInterface.h"
 #include "GameFramework/Actor.h"
 #include "BaseHorovodUnit.generated.h"
 

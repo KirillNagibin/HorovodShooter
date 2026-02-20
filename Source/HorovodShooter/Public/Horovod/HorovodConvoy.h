@@ -4,9 +4,9 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "HorovodManager.h"
-#include "HorovodDataAsset.h"
-#include "SplinePathActor.h"
+#include "Horovod/HorovodManager.h"
+#include "Horovod/HorovodDataAsset.h"
+#include "Spline/SplinePathActor.h"
 #include "HorovodConvoy.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnPathFinishedSignature);

@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "HorovodConvoy.h"
+#include "Horovod/HorovodConvoy.h"
 
 #include "Kismet/GameplayStatics.h"
 

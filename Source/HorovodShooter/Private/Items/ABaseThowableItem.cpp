@@ -1,11 +1,13 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "ABaseThowableItem.h"
+#include "Items/ABaseThowableItem.h"
 
-#include "DamagableInterface.h"
+#include "TimeManagerComponent.h"
+#include "Interfaces/DamagableInterface.h"
 #include "Components/StaticMeshComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
+#include "Kismet/GameplayStatics.h"
 
 static const FName COLLISION_PHYSICS(TEXT("PhysicsActor"));
 static const FName COLLISION_BLOCK_ALL(TEXT("BlockAll"));
@@ -47,21 +49,27 @@ void AABaseThowableItem::BeginPlay()
 void AABaseThowableItem::OnGrabbed_Implementation(USceneComponent* GrabberComponent) 
 {
 	SetState(EThrowableState::Held);
+	if (GrabberComponent && GrabberComponent->GetOwner())
+	{
+		this->CustomTimeDilation = GrabberComponent->GetOwner()->CustomTimeDilation;
+	}
 }
 
-void AABaseThowableItem::OnReleased_Implementation()
+void AABaseThowableItem::OnReleased_Implementation(AActor* Releaser)
 {
+	this->CustomTimeDilation = 0.0f;
 	SetState(EThrowableState::Loot);
 }
 
 void AABaseThowableItem::OnThrown_Implementation(FVector Direction, float Magnitude)
 {
 	SetState(EThrowableState::Thrown);
-	
+	this->CustomTimeDilation = 1.0f;
 	if (ProjectileMovement)
 	{
 		ProjectileMovement->Velocity = Direction * Magnitude;
 	}
+	
 }
 
 void AABaseThowableItem::OnProjectileBounce(const FHitResult& ImpactResult, const FVector& ImpactVelocity)
@@ -129,6 +137,7 @@ void AABaseThowableItem::SetState(EThrowableState NewState)
 		
 		ProjectileMovement->OnProjectileBounce.AddDynamic(this, &AABaseThowableItem::OnProjectileBounce);
 		ProjectileMovement->OnProjectileStop.AddDynamic(this, &AABaseThowableItem::OnProjectileStop);
+		
 		break;
 	case EThrowableState::Impact:
 		ProjectileMovement->Deactivate();
@@ -136,6 +145,8 @@ void AABaseThowableItem::SetState(EThrowableState NewState)
 		break;
 	}
 }
+
+
 
 void AABaseThowableItem::HandleImpact_Implementation(const FHitResult& Hit)
 {

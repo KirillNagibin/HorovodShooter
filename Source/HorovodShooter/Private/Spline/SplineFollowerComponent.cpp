@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "SplineFollowerComponent.h"
+#include "Spline/SplineFollowerComponent.h"
 
 // Sets default values for this component's properties
 USplineFollowerComponent::USplineFollowerComponent()

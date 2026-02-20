@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Engine/DataAsset.h"
-#include "HorovodManager.h"
+#include "Horovod/HorovodManager.h"
 #include "HorovodDataAsset.generated.h"
 
 /**

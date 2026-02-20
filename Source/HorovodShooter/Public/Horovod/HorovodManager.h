@@ -6,8 +6,8 @@
 #include "GameFramework/Actor.h"
 #include "Components/SplineComponent.h"
 #include "Components/SphereComponent.h"
-#include "SplineShapeGeneratorComponent.h"
-#include "BaseHorovodUnit.h"
+#include "Spline/SplineShapeGeneratorComponent.h"
+#include "Horovod/BaseHorovodUnit.h"
 #include "HorovodManager.generated.h"
 
 

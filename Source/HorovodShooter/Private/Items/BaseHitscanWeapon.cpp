@@ -1,8 +1,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "BaseHitscanWeapon.h"
-#include "DamagableInterface.h"
+#include "Items/BaseHitscanWeapon.h"
+#include "Interfaces/DamagableInterface.h"
 #include "HorovodShooter/HorovodShooter.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetSystemLibrary.h"

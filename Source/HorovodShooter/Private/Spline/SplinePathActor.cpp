@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "SplinePathActor.h"
+#include "Spline/SplinePathActor.h"
 
 // Sets default values
 ASplinePathActor::ASplinePathActor()

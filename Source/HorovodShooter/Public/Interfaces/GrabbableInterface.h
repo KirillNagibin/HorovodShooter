@@ -27,7 +27,7 @@ public:
 	void OnGrabbed(USceneComponent* GrabberComponent);
 	
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Interface")
-	void OnReleased();
+	void OnReleased(AActor* Releaser);
 	
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Interface")
 	void OnThrown(FVector Direction, float Magnitude);

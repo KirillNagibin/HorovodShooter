@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
-#include "SplinePathActor.h"
+#include "Spline/SplinePathActor.h"
 #include "SplineFollowerComponent.generated.h"
 
 //DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnPathFinishedSignature);

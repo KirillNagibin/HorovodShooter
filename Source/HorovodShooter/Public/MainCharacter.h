@@ -3,7 +3,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "InputActionValue.h"
-#include "DamagableInterface.h"
+#include "Interfaces/DamagableInterface.h"
 #include "GameplayTagContainer.h"
 #include "MainCharacter.generated.h"
 
@@ -47,7 +47,6 @@ public:
 	TObjectPtr<UGrabberComponent> GrabberComponent;
 
 	// --- INPUT ACTIONS ---
-	// MappingContext уехал в контроллер, здесь только действия
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
 	TObjectPtr<UInputAction> JumpAction;
 	
@@ -62,6 +61,9 @@ public:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
 	TObjectPtr<UInputAction> FireAction;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
+	TObjectPtr<UInputAction> ToggleTimeDilationAction;
 
 	// --- DASH SETTINGS ---
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "MovementFeel|Dash", meta = (ClampMin = "0.0"))
@@ -75,6 +77,11 @@ public:
 	UFUNCTION(BlueprintImplementableEvent, Category = "MovementFeel|Dash")
 	void OnDashStart();
 	
+	//TimeDilation
+	void ToggleTimeDilation(const FInputActionValue& Value);
+	UPROPERTY()
+	bool bIsTimeDilated = false;
+	
 	//Настройки качания головой
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "MovementFeel|Audio")
 	float StepDistance = 350.0f;
@@ -86,8 +93,6 @@ public:
 	TObjectPtr<USoundBase> DashSound;;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "MovementFeel|Audio")
 	TSubclassOf<UCameraShakeBase> LandCameraShake;
-	
-
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MovementFeel|HeadBob")
 	bool bEnableHeadBob = true;

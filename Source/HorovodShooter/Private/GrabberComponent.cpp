@@ -9,7 +9,7 @@
 //Не забываем включит интерфейс
 #include "Interfaces/GrabbableInterface.h"
 #include "Interfaces/UsableInterface.h"
-#include "ABaseThowableItem.h"
+#include "Items/ABaseThowableItem.h"
 #include "PhysicsEngine/PhysicsHandleComponent.h"
 
 // Sets default values for this component's properties
@@ -151,6 +151,7 @@ void UGrabberComponent::ThrowHeldObject()
 
 void UGrabberComponent::ReleaseHeldObject()
 {
+	
 	if (!PhysicsHandle || !HeldComponent) {return;}
 	AActor* HeldActor = HeldComponent->GetOwner();
 	
@@ -158,7 +159,7 @@ void UGrabberComponent::ReleaseHeldObject()
 	
 	if (HeldComponent && HeldActor->Implements<UGrabbableInterface>())
 	{
-		IGrabbableInterface::Execute_OnReleased(HeldActor);
+		IGrabbableInterface::Execute_OnReleased(HeldActor, GetOwner());
 	}
 	HeldComponent = nullptr;
 }

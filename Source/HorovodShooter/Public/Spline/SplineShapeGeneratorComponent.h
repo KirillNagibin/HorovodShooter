@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
-#include "SplineShapeSettings.h"
+#include "Spline/SplineShapeSettings.h"
 #include "SplineShapeGeneratorComponent.generated.h"
 
 

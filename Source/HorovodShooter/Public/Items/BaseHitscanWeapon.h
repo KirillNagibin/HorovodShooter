@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "ABaseThowableItem.h"
+#include "Items/ABaseThowableItem.h"
 #include "Interfaces/UsableInterface.h"
 #include "BaseHitscanWeapon.generated.h"
 

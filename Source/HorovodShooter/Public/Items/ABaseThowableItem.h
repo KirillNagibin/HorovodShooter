@@ -54,7 +54,7 @@ protected:
 	
 public:
 	virtual void OnGrabbed_Implementation(USceneComponent* GrabberComponent) override;
-	virtual void OnReleased_Implementation() override;
+	virtual void OnReleased_Implementation(AActor* Releaser) override;
 	virtual void OnThrown_Implementation(FVector Direction, float Magnitude) override;
 	
 	//Геттеры
@@ -70,4 +70,5 @@ protected:
 	void SetState(EThrowableState NewState); 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Combat", meta = (Categories = "Damage"))
 	void HandleImpact(const FHitResult& Hit);
+	
 };
