@@ -35,16 +35,16 @@ void UDashComponent::BeginPlay()
 
 
 
-void UDashComponent::PerformDash(FVector DashDirection)
+bool UDashComponent::PerformDash(FVector DashDirection)
 {
-	if (!OwnerCharacter || !OwnerCharacter->GetCharacterMovement()) return;
+	if (!OwnerCharacter || !OwnerCharacter->GetCharacterMovement()) return false;
 	
 	UWorld* World = GetWorld();
-	if (!World) return;
+	if (!World) return false;
 	
 	float CurrentTime = GetWorld()->GetRealTimeSeconds();
 	
-	if (CurrentTime - LastDashRealTime < DashCooldown) return;
+	if (CurrentTime - LastDashRealTime < DashCooldown) return false;
 	
 	if (DashDirection.IsNearlyZero())
 	{
@@ -75,6 +75,8 @@ void UDashComponent::PerformDash(FVector DashDirection)
 	float AdjustedDuration = CurrentTimeDilation - LastDashRealTime;
 	
 	World->GetTimerManager().SetTimer(DashDurationTimer, this, &UDashComponent::StopDashing, AdjustedDuration, false);
+
+	return true;
 }
 
 

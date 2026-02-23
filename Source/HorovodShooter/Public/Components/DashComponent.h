@@ -18,7 +18,7 @@ public:
 
 	
 	UFUNCTION(BlueprintCallable, Category = "Dash")
-	void PerformDash(FVector DashDirection);
+	bool PerformDash(FVector DashDirection);
 	
 	
 protected:

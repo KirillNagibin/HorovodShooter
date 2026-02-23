@@ -2,6 +2,7 @@
 #include "EnhancedInputComponent.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
+#include "Components/DashComponent.h"
 #include "GrabberComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "HorovodPlayerController.h" // Важный инклюд для связи с мозгом
@@ -17,6 +18,8 @@ AMainCharacter::AMainCharacter()
 	FirstPersonCamera->SetupAttachment(GetCapsuleComponent());
 	FirstPersonCamera->SetRelativeLocation(FVector(-10.f, 0.f, 60.f));
 	FirstPersonCamera->bUsePawnControlRotation = true;
+	
+	DashComponent = CreateDefaultSubobject<UDashComponent>(TEXT("DashComponent"));
 	
 	GetCharacterMovement()->MaxWalkSpeed = 1000.0f;
 	GetCharacterMovement()->MaxAcceleration = 600.0f;
@@ -37,10 +40,7 @@ void AMainCharacter::BeginPlay()
 		UE_LOG(LogTemp, Error, TEXT("MainCharacter: GrabberComponent not found! Please add it in Blueprint."));
 	}
 	
-	// Запоминаем нормальное трение для механики Дэша
-	DefaultGroundFriction = GetCharacterMovement()->GroundFriction;
-	DefaultBrakingDeceleration = GetCharacterMovement()->BrakingDecelerationWalking;
-	
+
 	if (FirstPersonCamera)
 	{
 		DefaultCameraLocation = FirstPersonCamera->GetRelativeLocation();
@@ -112,7 +112,8 @@ void AMainCharacter::ResetCharacterState()
 	GetCharacterMovement()->SetMovementMode(MOVE_Walking);
 	GetCharacterMovement()->Velocity = FVector::ZeroVector;
 	
-	StopDashing(); // Возвращаем трение на место
+	
+	
 }
 
 void AMainCharacter::ToggleTimeDilation(const FInputActionValue& Value)
@@ -190,47 +191,15 @@ void AMainCharacter::Look(const FInputActionValue& Value)
 }
 
 void AMainCharacter::Dash(const FInputActionValue& Value)
-{	
-	float CurrentRealTime = GetWorld()->GetRealTimeSeconds();
-	if (CurrentRealTime - LastDashRealTime < DashCooldown)
-	{
-		return;
-	}
-	// Убираем трение для скольжения
-	GetCharacterMovement()->GroundFriction = 0.0f;
-	GetCharacterMovement()->BrakingDecelerationWalking = 0.0f;
-	
-	FVector DashDirection = GetLastMovementInputVector();
-	if (DashDirection.IsNearlyZero())
-	{
-		DashDirection = GetActorForwardVector();
-	}
-	
-	LaunchCharacter(DashDirection * DashForce, true, true);
-	OnDashStart();
-	if (DashSound)
-	{
-		UGameplayStatics::PlaySoundAtLocation(this, DashSound, GetActorLocation());
-	}
-	LastDashRealTime = CurrentRealTime;
-	if (UWorld* World = GetWorld())
-	{
-		float CurrentTimeDilation = UGameplayStatics::GetGlobalTimeDilation(this);
-		float AdjustedDuration = DashDuration * CurrentTimeDilation;
-		
-		// Таймер остановки скольжения (Длительность Дэша)
-		World->GetTimerManager().SetTimer(DashDurationTimer, this, &AMainCharacter::StopDashing, AdjustedDuration, false);
-	}
-	OnDashStart();
-}
-
-void AMainCharacter::StopDashing()
 {
-	// Возвращаем нормальное трение
-	GetCharacterMovement()->GroundFriction = DefaultGroundFriction;
-	GetCharacterMovement()->BrakingDecelerationWalking = DefaultBrakingDeceleration;
+	if (DashComponent)
+	{
+		if (DashComponent->PerformDash(GetLastMovementInputVector()))
+		{
+			OnDashStart();
+		}
+	}
 }
-
 
 
 void AMainCharacter::OnPrimaryAction()

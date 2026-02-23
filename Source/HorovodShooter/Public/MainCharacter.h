@@ -9,7 +9,8 @@
 
 class UCameraComponent;
 class UInputAction;
-class UGrabberComponent;
+class UGrabberComponent;	
+class UDashComponent;
 
 
 UCLASS()
@@ -47,6 +48,9 @@ public:
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	TObjectPtr<UGrabberComponent> GrabberComponent;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+	TObjectPtr<UDashComponent> DashComponent;
+	
 
 	// --- INPUT ACTIONS ---
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
@@ -90,8 +94,6 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "MovementFeel|Audio")
 	TObjectPtr<USoundBase> LandSound;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "MovementFeel|Audio")
-	TObjectPtr<USoundBase> DashSound;;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "MovementFeel|Audio")
 	TSubclassOf<UCameraShakeBase> LandCameraShake;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MovementFeel|HeadBob")
@@ -109,13 +111,6 @@ private:
 	
 protected:
 	
-	float LastDashRealTime = -100.f;
-	// Таймеры Дэша
-	FTimerHandle DashDurationTimer;   // Время скольжения
-
-	// Переменные для хранения дефолтного трения
-	float DefaultGroundFriction;
-	float DefaultBrakingDeceleration;
 
 	void ProcessMovementEffects(float DeltaTime);
 	
@@ -125,8 +120,6 @@ protected:
 	void Look(const FInputActionValue& Value);
 	void Dash(const FInputActionValue& Value);
 	
-	// Вспомогательные функции Дэша
-	void StopDashing();
 	void OnPrimaryAction();
 	
 	virtual void Landed(const FHitResult& Hit) override;
