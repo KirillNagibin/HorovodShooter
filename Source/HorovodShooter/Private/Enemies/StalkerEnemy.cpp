@@ -37,6 +37,11 @@ void AStalkerEnemy::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	if (CachedPlayer)
+	{
+		FVector PlayerLocation = CachedPlayer->GetActorLocation() + FVector(0.0f, 0.0f, 50.0f);
+		TargetLookLocation = FMath::VInterpTo(TargetLookLocation, PlayerLocation, DeltaTime, HeadTrackingSpeed);
+	}
 }
 
 
