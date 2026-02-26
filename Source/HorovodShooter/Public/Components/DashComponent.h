@@ -43,6 +43,7 @@ private:
 	
 	float LastDashRealTime = -100.f;
 
+	TObjectPtr<class UCharacterMovementComponent> MovementComponent;
 	float OriginalGroundFriction;
 	float OriginalBrakingDeceleration;
 	

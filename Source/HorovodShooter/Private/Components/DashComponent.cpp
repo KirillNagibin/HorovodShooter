@@ -16,7 +16,7 @@ UDashComponent::UDashComponent()
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = false;
 
-	// ...
+
 }
 
 
@@ -31,6 +31,9 @@ void UDashComponent::BeginPlay()
 		UE_LOG(LogTemp, Error, TEXT("Dash isnt attached to a character. It's attached to a %s"), *GetOwner()->GetName());
 	}
 	
+	MovementComponent = OwnerCharacter->GetCharacterMovement();
+	OriginalGroundFriction = MovementComponent->GroundFriction;
+	OriginalBrakingDeceleration = MovementComponent->BrakingDecelerationWalking;
 }
 
 
@@ -54,10 +57,6 @@ bool UDashComponent::PerformDash(FVector DashDirection)
 	{
 		DashDirection.Normalize();
 	}
-	
-	UCharacterMovementComponent* MovementComponent = OwnerCharacter->GetCharacterMovement();
-	OriginalGroundFriction = MovementComponent->GroundFriction;
-	OriginalBrakingDeceleration = MovementComponent->BrakingDecelerationWalking;
 	
 	MovementComponent->GroundFriction = 0.0f;
 	MovementComponent->BrakingDecelerationWalking = 0.0f;
@@ -84,7 +83,6 @@ void UDashComponent::StopDashing()
 {
 	if (OwnerCharacter && OwnerCharacter->GetCharacterMovement())
 	{
-		UCharacterMovementComponent* MovementComponent = OwnerCharacter->GetCharacterMovement();
 		MovementComponent->GroundFriction = OriginalGroundFriction;
 		MovementComponent->BrakingDecelerationWalking = OriginalBrakingDeceleration;
 	}
