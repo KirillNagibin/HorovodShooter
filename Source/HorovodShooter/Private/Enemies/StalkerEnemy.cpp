@@ -121,5 +121,5 @@ FVector AStalkerEnemy::CalculateEvasionDirection(FVector HazardLocation, FVector
 	
 	if (!bSecondaryBlocked) return SecondaryDirection;
 	
-	return -HazardDirection;
+	return HazardDirection;
 }
