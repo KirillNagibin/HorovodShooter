@@ -43,8 +43,7 @@ void UBTService_DistanceCheck::TickNode(UBehaviorTreeComponent& OwnerComp, uint8
 	
 	if (!IsValid(AIPawn) || !IsValid(TargetActor)) return;
 	
-	float Distance = FMath::Abs(FVector::Distance(AIPawn->GetActorLocation(), TargetActor->GetActorLocation()));
-	
+	float Distance = FVector::DistXY(AIPawn->GetActorLocation(), TargetActor->GetActorLocation());
 	bool bNeedToMove = (Distance <= MinDistance || Distance >= MaxDistance);
 	BlackboardComp->SetValueAsBool(OutOfRangeKey.SelectedKeyName, bNeedToMove);
 	
