@@ -89,6 +89,7 @@ void AStalkerEnemy::OnWarningRecieved_Implementation(FVector HazardLocation, FVe
 	if (bDidDash)
 	{
 		bIsEvading = true;
+		BurstDirection = SafeDirection;
 		
 		if (AAIController* AICon = Cast<AAIController>(GetController()))
 		{
@@ -103,7 +104,7 @@ void AStalkerEnemy::OnWarningRecieved_Implementation(FVector HazardLocation, FVe
 			FTimerHandle EvasionTimer;
 			World->GetTimerManager().SetTimer(EvasionTimer, this, &AStalkerEnemy::ResetEvasionState, 1.0f, false);
 		}
-		OnDashEffectStart();
+		OnDashEffectStart(SafeDirection);
 	}
 }
 

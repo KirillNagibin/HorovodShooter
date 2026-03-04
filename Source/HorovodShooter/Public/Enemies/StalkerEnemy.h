@@ -49,8 +49,10 @@ protected:
 	float EvasionCheckDistance = 400.0f;
 	UPROPERTY(EditDefaultsOnly, Category = "AI|Evasion")
 	bool bIsEvading = false;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite,  Category = "AI|Evasion")
+ 	FVector BurstDirection;
 	UFUNCTION(BlueprintImplementableEvent, Category = "AI|Events")
-	void OnDashEffectStart();
+	void OnDashEffectStart(FVector BurstDirectio);
 	
 	UFUNCTION()
 	void ResetEvasionState();
