@@ -80,12 +80,13 @@ void AStalkerEnemy::TakeDamage_Implementation(const FGameplayTagContainer& Incom
 void AStalkerEnemy::OnWarningRecieved_Implementation(FVector HazardLocation, FVector HazardVelocity)
 {
 	if (!DashComponent) return;
-	
 	if (bIsEvading) return;
+	
 	
 	FVector SafeDirection = CalculateEvasionDirection(HazardLocation, HazardVelocity);
 	bool bDidDash = DashComponent->PerformDash(SafeDirection);
 	
+	//Events after dash
 	if (bDidDash)
 	{
 		bIsEvading = true;
@@ -112,6 +113,7 @@ void AStalkerEnemy::OnWarningRecieved_Implementation(FVector HazardLocation, FVe
 void AStalkerEnemy::ResetEvasionState()
 {
 	bIsEvading = false;
+	//Interrupt AI logic if dashing
 	if (AAIController* AICon = Cast<AAIController>(GetController()))
 	{
 		if (UBrainComponent* BrainComp = AICon->GetBrainComponent())
@@ -135,6 +137,7 @@ FVector AStalkerEnemy::CalculateEvasionDirection(FVector HazardLocation, FVector
 	FVector PrimaryDirection = (Dot > 0.0f) ? RightRelative : LeftRelative;
 	FVector SecondaryDirection = (Dot > 0.0f) ? LeftRelative : RightRelative; 
 	
+	// Trace to feel where does the hazard come
 	FHitResult HitResult;
 	FCollisionQueryParams Params;
 	Params.AddIgnoredActor(this);
