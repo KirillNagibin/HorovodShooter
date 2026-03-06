@@ -20,6 +20,7 @@ UBTService_DistanceCheck::UBTService_DistanceCheck()
 	RandomDeviation = 0.1f; 
 }
 
+//Every frame enemy checks distance to the target to evaluate his next move
 void UBTService_DistanceCheck::TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds)
 {
 	Super::TickNode(OwnerComp, NodeMemory, DeltaSeconds);

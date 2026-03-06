@@ -63,7 +63,7 @@ void AStalkerEnemy::Tick(float DeltaTime)
 }
 
 
-
+//Enemy plays anymation when takes damage
 void AStalkerEnemy::TakeDamage_Implementation(const FGameplayTagContainer& IncomingDamageTags)
 {
 	if (IncomingDamageTags.HasTag(FGameplayTag::RequestGameplayTag("Damage.Ozempic")))
