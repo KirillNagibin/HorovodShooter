@@ -45,10 +45,12 @@ void UBTService_DistanceCheck::TickNode(UBehaviorTreeComponent& OwnerComp, uint8
 	if (!IsValid(AIPawn) || !IsValid(TargetActor)) return;
 	
 	float Distance = FVector::DistXY(AIPawn->GetActorLocation(), TargetActor->GetActorLocation());
-	bool bNeedToMove = (Distance <= MinDistance || Distance >= MaxDistance);
-	BlackboardComp->SetValueAsBool(OutOfRangeKey.SelectedKeyName, bNeedToMove);
+	bool bNeedToChase = (Distance >= MaxDistance);
+	bool bNeedToDash = (Distance <= MinDistance);
+	BlackboardComp->SetValueAsBool(OutOfRangeKey.SelectedKeyName, bNeedToChase);
+	BlackboardComp->SetValueAsBool(TooCloseKey.SelectedKeyName, bNeedToDash);
 	
-	if (bNeedToMove)
+	if (bNeedToChase)
 	{
 		FVector CurrentMoveLocation = BlackboardComp->GetValueAsVector(MoveLocationKey.SelectedKeyName);
 		if (!CurrentMoveLocation.IsNearlyZero())

@@ -52,7 +52,7 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite,  Category = "AI|Evasion")
  	FVector BurstDirection;
 	UFUNCTION(BlueprintImplementableEvent, Category = "AI|Events")
-	void OnDashEffectStart(FVector BurstDirectio);
+	void OnDashEffectsStart(FVector DashDirection);
 	
 	UFUNCTION()
 	void ResetEvasionState();
@@ -62,4 +62,7 @@ private:
 	FVector CalculateEvasionDirection(FVector HazardLocation, FVector HazardVelocity);
 	UPROPERTY()
 	AActor* CachedPlayer;
+	
+	UFUNCTION()
+	void HandleDashPerformed(FVector DashDirection);
 };

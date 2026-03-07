@@ -6,6 +6,7 @@
 #include "Components/ActorComponent.h"
 #include "DashComponent.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnDashEffectStartSignature, FVector, BurstDirection);
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class HOROVODSHOOTER_API UDashComponent : public UActorComponent
@@ -19,6 +20,9 @@ public:
 	
 	UFUNCTION(BlueprintCallable, Category = "Dash")
 	bool PerformDash(FVector DashDirection);
+	
+	UPROPERTY(BlueprintAssignable, Category = "Dash")
+	FOnDashEffectStartSignature OnDashPerformed;
 	
 	
 protected:

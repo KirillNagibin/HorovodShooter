@@ -25,6 +25,8 @@ protected:
 	
 	UPROPERTY(EditAnywhere, Category = "AI Distance")
 	FBlackboardKeySelector OutOfRangeKey;
+	UPROPERTY(EditAnywhere, Category = "AI Distance")
+	FBlackboardKeySelector TooCloseKey;;
 	
 	UPROPERTY(EditAnywhere, Category = "AI Distance")
 	FBlackboardKeySelector MoveLocationKey;

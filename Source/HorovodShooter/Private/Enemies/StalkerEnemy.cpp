@@ -36,6 +36,11 @@ void AStalkerEnemy::BeginPlay()
 	
 	CachedPlayer = UGameplayStatics::GetPlayerPawn(this, 0);
 	TargetLookLocation = GetActorLocation() + GetActorForwardVector() * 1000.f;
+	
+	if (DashComponent)
+	{
+		DashComponent->OnDashPerformed.AddDynamic(this, &AStalkerEnemy::HandleDashPerformed);
+	}
 }
 
 // Called every frame
@@ -105,7 +110,6 @@ void AStalkerEnemy::OnWarningRecieved_Implementation(FVector HazardLocation, FVe
 			FTimerHandle EvasionTimer;
 			World->GetTimerManager().SetTimer(EvasionTimer, this, &AStalkerEnemy::ResetEvasionState, 1.0f, false);
 		}
-		OnDashEffectStart(SafeDirection);
 	}
 }
 
@@ -162,4 +166,9 @@ FVector AStalkerEnemy::CalculateEvasionDirection(FVector HazardLocation, FVector
 	if (!bSecondaryBlocked) return SecondaryDirection;
 	
 	return HazardDirection;
+}
+
+void AStalkerEnemy::HandleDashPerformed(FVector DashDirection)
+{
+	OnDashEffectsStart(-DashDirection);
 }
