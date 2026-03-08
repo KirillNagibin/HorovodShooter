@@ -50,23 +50,48 @@ void AStalkerEnemy::Tick(float DeltaTime)
 
 	if (CachedPlayer)
 	{
+		bool bIsMoving = GetVelocity().Size2D() >= 10.f;
 		FVector PlayerLocation = CachedPlayer->GetActorLocation() + FVector(0.0f, 0.0f, 50.0f);
 		TargetLookLocation = FMath::VInterpTo(TargetLookLocation, PlayerLocation, DeltaTime, HeadTrackingSpeed);
 		
-		FVector DirectionToPlayer = (PlayerLocation - GetActorLocation()).GetSafeNormal();
-		FRotator TargetRotation = DirectionToPlayer.Rotation();
-		FRotator CurrentRotation = GetActorRotation();
-		
-		float DeltaYaw = FMath::FindDeltaAngleDegrees(CurrentRotation.Yaw, TargetRotation.Yaw);
-		
-		if (FMath::Abs(DeltaYaw) > 60.0f)
+		if (bIsMoving)
 		{
-			FRotator NewRotation = FMath::RInterpTo(CurrentRotation, FRotator(0.0f, TargetRotation.Yaw, 0.0f), DeltaTime, BodyTurnRate);
-			SetActorRotation(NewRotation);
+			bIsTurning = false;
+			GetCharacterMovement()->bUseControllerDesiredRotation = true;
+			SpineYaw = FMath::FInterpTo(SpineYaw, 0.0f, DeltaTime, 5.0f);
+			TurnRate = 0.0f;
 		}
+		else
+		{
+			GetCharacterMovement()->bUseControllerDesiredRotation = false;
+			FVector DirectionToPlayer = (PlayerLocation - GetActorLocation()).GetSafeNormal();
+			FRotator TargetRotation = DirectionToPlayer.Rotation();
+			FRotator CurrentRotation = GetActorRotation();
+
+			float DeltaYaw = FMath::FindDeltaAngleDegrees(CurrentRotation.Yaw, TargetRotation.Yaw);
+			
+			if (FMath::Abs(DeltaYaw) > 80.0f && !bIsTurning)
+			{
+				bIsTurning = true;
+			}
+			if (bIsTurning && FMath::Abs(DeltaYaw) < 5.0f)
+			{
+				bIsTurning = false;
+			}
+			if (bIsTurning)
+			{
+				FRotator NewRotation = FMath::RInterpConstantTo(CurrentRotation, FRotator(0.0f, TargetRotation.Yaw, 0.0f), DeltaTime, BodyTurnRate * 10.0f);
+				SetActorRotation(NewRotation);
+				TurnRate = DeltaYaw;
+			}
+			else
+			{
+				TurnRate = FMath::FInterpTo(TurnRate, 0.0f, DeltaTime, 10.0f);
+			}
+		}
+		
 	}
 }
-
 
 
 void AStalkerEnemy::TakeDamage_Implementation(const FGameplayTagContainer& IncomingDamageTags)

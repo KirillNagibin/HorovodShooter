@@ -39,18 +39,24 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AI|Animation")
 	FVector TargetLookLocation;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AI|Animation")
+	float TurnRate = 0.0f;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AI|Animation")
+	float SpineYaw = 0.0f;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "AI|Animation")
 	float HeadTrackingSpeed = 5.0f;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "AI|Animation")
-	float BodyTurnRate = 50.0f;
+	float BodyTurnRate = 3.0f;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "AI|Animation")
 	TObjectPtr<UAnimMontage> BlindingMontage;
+	
 	UPROPERTY(EditDefaultsOnly, Category = "AI|Evasion")
 	float EvasionCheckDistance = 400.0f;
-	UPROPERTY(EditDefaultsOnly, Category = "AI|Evasion")
+	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly, Category = "AI|Evasion")
 	bool bIsEvading = false;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite,  Category = "AI|Evasion")
  	FVector BurstDirection;
+	
 	UFUNCTION(BlueprintImplementableEvent, Category = "AI|Events")
 	void OnDashEffectsStart(FVector DashDirection);
 	
@@ -62,6 +68,9 @@ private:
 	FVector CalculateEvasionDirection(FVector HazardLocation, FVector HazardVelocity);
 	UPROPERTY()
 	AActor* CachedPlayer;
+	
+	UPROPERTY()
+	bool bIsTurning;
 	
 	UFUNCTION()
 	void HandleDashPerformed(FVector DashDirection);
