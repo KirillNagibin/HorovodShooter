@@ -24,6 +24,7 @@ AStalkerEnemy::AStalkerEnemy()
 	{
 		GetCharacterMovement()->bUseControllerDesiredRotation = true;
 		GetCharacterMovement()->bOrientRotationToMovement = false;
+		GetCharacterMovement()->bRequestedMoveUseAcceleration = true;
 	}
 	AIControllerClass = AEnemyAIController::StaticClass();
 	AutoPossessAI =	EAutoPossessAI::PlacedInWorldOrSpawned;
@@ -50,6 +51,7 @@ void AStalkerEnemy::Tick(float DeltaTime)
 
 	if (CachedPlayer)
 	{
+		bool bIsMoving = GetVelocity().Size2D() >= 10.f;
 		FVector PlayerLocation = CachedPlayer->GetActorLocation() + FVector(0.0f, 0.0f, 50.0f);
 		TargetLookLocation = FMath::VInterpTo(TargetLookLocation, PlayerLocation, DeltaTime, HeadTrackingSpeed);
 		
@@ -59,11 +61,37 @@ void AStalkerEnemy::Tick(float DeltaTime)
 		
 		float DeltaYaw = FMath::FindDeltaAngleDegrees(CurrentRotation.Yaw, TargetRotation.Yaw);
 		
-		if (FMath::Abs(DeltaYaw) > 60.0f)
-		{
-			FRotator NewRotation = FMath::RInterpTo(CurrentRotation, FRotator(0.0f, TargetRotation.Yaw, 0.0f), DeltaTime, BodyTurnRate);
-			SetActorRotation(NewRotation);
-		}
+			if (bIsMoving)
+			{
+				bIsTurning = false;
+				GetCharacterMovement()->bUseControllerDesiredRotation = true;
+				SpineYaw = FMath::FInterpTo(SpineYaw, 0.0f, DeltaTime, 5.0f);
+				TurnRate = 0.0f;
+			}
+			else
+			{
+				GetCharacterMovement()->bUseControllerDesiredRotation = false;
+			
+				if (FMath::Abs(DeltaYaw) > 80.0f && !bIsTurning)
+				{
+					bIsTurning = true;
+				}
+				if (bIsTurning && FMath::Abs(DeltaYaw) < 5.0f)
+				{
+					bIsTurning = false;
+				}
+				if (bIsTurning)
+				{
+					FRotator NewRotation = FMath::RInterpConstantTo(CurrentRotation, FRotator(0.0f, TargetRotation.Yaw, 0.0f), DeltaTime, BodyTurnRate * 10.0f);
+					SetActorRotation(NewRotation);
+					TurnRate = DeltaYaw;
+				}
+				else
+				{
+					TurnRate = FMath::FInterpTo(TurnRate, 0.0f, DeltaTime, 10.0f);
+				}
+			}
+		
 	}
 }
 
