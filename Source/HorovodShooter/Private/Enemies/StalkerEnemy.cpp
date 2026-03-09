@@ -65,7 +65,7 @@ void AStalkerEnemy::Tick(float DeltaTime)
 			{
 				bIsTurning = false;
 				GetCharacterMovement()->bUseControllerDesiredRotation = true;
-				SpineYaw = FMath::FInterpTo(SpineYaw, 0.0f, DeltaTime, 5.0f);
+				GetCharacterMovement()->RotationRate = FRotator(0.0f, 150.0f, 0.0f);
 				TurnRate = 0.0f;
 			}
 			else
