@@ -90,6 +90,11 @@ void AMainCharacter::TakeDamage_Implementation(const FGameplayTagContainer& Inco
 	{
 		bIsDead = true;
 		
+		for (auto& Pair : ActiveStatuses)
+		{
+			GetWorld()->GetTimerManager().ClearTimer(Pair.Value);
+		}
+		ActiveStatuses.Empty();
 		UE_LOG(LogTemp, Warning, TEXT("Character: Fatal Damage Received. Calling Controller..."));
 		
 		// 3. Отключаем физику тела (это ответственность Пешки)
