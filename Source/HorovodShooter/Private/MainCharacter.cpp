@@ -3,6 +3,7 @@
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/DashComponent.h"
+#include "Components/StatusManagerComponent.h"
 #include "GrabberComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "HorovodPlayerController.h" // Важный инклюд для связи с мозгом
@@ -20,6 +21,7 @@ AMainCharacter::AMainCharacter()
 	FirstPersonCamera->bUsePawnControlRotation = true;
 	
 	DashComponent = CreateDefaultSubobject<UDashComponent>(TEXT("DashComponent"));
+	StatusManager = CreateDefaultSubobject<UStatusManagerComponent>(TEXT("StatusManager"));
 	
 	GetCharacterMovement()->MaxWalkSpeed = 1000.0f;
 	GetCharacterMovement()->MaxAcceleration = 600.0f;
@@ -33,10 +35,6 @@ AMainCharacter::AMainCharacter()
 void AMainCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-	
-	DefaultGroundFriction = GetCharacterMovement()->GroundFriction;
-	DefaultBrakingDeceleration = GetCharacterMovement()->BrakingDecelerationWalking;
-	DefaultMaxWalkSpeed = GetCharacterMovement()->MaxWalkSpeed;
 	
 	GrabberComponent = FindComponentByClass<UGrabberComponent>();
 	if (!GrabberComponent)
@@ -89,12 +87,10 @@ void AMainCharacter::TakeDamage_Implementation(const FGameplayTagContainer& Inco
 	if (IncomingDamageTags.HasTag(FGameplayTag::RequestGameplayTag("Damage.Contact")))
 	{
 		bIsDead = true;
-		
-		for (auto& Pair : ActiveStatuses)
+		if (StatusManager)
 		{
-			GetWorld()->GetTimerManager().ClearTimer(Pair.Value);
+			StatusManager->ClearAllStatuses();
 		}
-		ActiveStatuses.Empty();
 		UE_LOG(LogTemp, Warning, TEXT("Character: Fatal Damage Received. Calling Controller..."));
 		
 		// 3. Отключаем физику тела (это ответственность Пешки)
@@ -115,38 +111,9 @@ void AMainCharacter::TakeDamage_Implementation(const FGameplayTagContainer& Inco
 void AMainCharacter::ReceiveStatusEffect_Implementation(const FGameplayTag& StatusTag, float Duration)
 {
 	if (bIsDead) {return;}
-	UWorld* World = GetWorld();
-	if (!World) {return;}
-	
-	if (!ActiveStatuses.Contains(StatusTag))
+	if (StatusManager)
 	{
-		ApplyStatus(StatusTag);
-	}
-	
-	FTimerHandle& TimerHandle = ActiveStatuses.FindOrAdd(StatusTag);
-	
-	FTimerDelegate TimerDel;
-	TimerDel.BindUObject(this, &AMainCharacter::RemoveStatus, StatusTag);
-	
-	World->GetTimerManager().SetTimer(TimerHandle, TimerDel, Duration, false);
-}
-
-
-void AMainCharacter::ApplyStatus(const FGameplayTag& StatusTag)
-{
-	if (StatusTag.MatchesTag(FGameplayTag::RequestGameplayTag("Status.Slowed")))
-	{
-		GetCharacterMovement()->MaxWalkSpeed = DefaultMaxWalkSpeed * 0.3;
-	}
-}
-
-void AMainCharacter::RemoveStatus(FGameplayTag StatusTag)
-{
-	ActiveStatuses.Remove(StatusTag);
-
-	if (StatusTag.MatchesTag(FGameplayTag::RequestGameplayTag("Status.Slowed")))
-	{
-		GetCharacterMovement()->MaxWalkSpeed = DefaultMaxWalkSpeed;
+		StatusManager->ReceiveStatusEffect(StatusTag, Duration);
 	}
 }
 
@@ -154,10 +121,13 @@ void AMainCharacter::ResetCharacterState()
 {
 	bIsDead = false;
 	
+	if (StatusManager)
+	{
+		StatusManager->ClearAllStatuses();
+	}
 	// Включаем физику обратно
 	GetCharacterMovement()->SetMovementMode(MOVE_Walking);
 	GetCharacterMovement()->Velocity = FVector::ZeroVector;
-	GetCharacterMovement()->MaxWalkSpeed = DefaultMaxWalkSpeed;
 
 }
 

@@ -52,7 +52,6 @@ void UStatusManagerComponent::ClearAllStatuses()
 	for (auto& Pair: ActiveStatuses)
 	{
 		World->GetTimerManager().ClearTimer(Pair.Value);
-		
 		if (Pair.Key.MatchesTag(FGameplayTag::RequestGameplayTag("Status.Slowed")) && OwnerCharacter && OwnerCharacter->GetCharacterMovement())
 		{
 			OwnerCharacter->GetCharacterMovement()->MaxWalkSpeed = DefaultMaxWalkSpeed;
@@ -64,7 +63,6 @@ void UStatusManagerComponent::ClearAllStatuses()
 void UStatusManagerComponent::ApplyStatus(const FGameplayTag& StatusTag)
 {
 	if (!OwnerCharacter || !OwnerCharacter->GetCharacterMovement()) {return;}
-	
 	if (StatusTag.MatchesTag(FGameplayTag::RequestGameplayTag("Status.Slowed")))
 	{
 		OwnerCharacter->GetCharacterMovement()->MaxWalkSpeed = DefaultMaxWalkSpeed * 0.2;

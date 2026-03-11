@@ -12,6 +12,7 @@ class UCameraComponent;
 class UInputAction;
 class UGrabberComponent;	
 class UDashComponent;
+class UStatusManagerComponent;
 
 
 UCLASS()
@@ -53,7 +54,8 @@ public:
 	TObjectPtr<UGrabberComponent> GrabberComponent;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	TObjectPtr<UDashComponent> DashComponent;
-	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+	TObjectPtr<UStatusManagerComponent> StatusManager;
 
 	// INPUT ACTIONS
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
@@ -73,16 +75,6 @@ public:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
 	TObjectPtr<UInputAction> ToggleTimeDilationAction;
-
-	
-	//STATUS EFFECTS
-	TMap<FGameplayTag, FTimerHandle> ActiveStatuses;
-	float DefaultMaxWalkSpeed;
-	float DefaultGroundFriction;
-	float DefaultBrakingDeceleration;
-	
-	void ApplyStatus(const FGameplayTag& StatusTag);
-	void RemoveStatus(FGameplayTag StatusTag);
 	
 
 	//Настройки качания головой
