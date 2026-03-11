@@ -42,6 +42,8 @@ struct FHorovodWagonData
 	float FadeDistance = 300.0f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Horovod Settings")
 	bool bIsDecorative = false;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Horovod Settings", meta = (ClampMin = "1", EditContition = "bIsDecorative"))
+	int32 TotalTimeSlices = 1;
 };
 
 UCLASS()
@@ -66,22 +68,17 @@ public:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
 	TObjectPtr<USplineComponent> SplineComponent;
-	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
 	TObjectPtr<USphereComponent> RootCollider;
-	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "HorovodData", meta = (ShowOnlyInnerProperties))
 	FHorovodWagonData WagonData;
 	
 	UFUNCTION(BlueprintCallable, Category = "HorovodData")
 	void InitializeFromData(const FHorovodWagonData& NewData);
-	
 	UFUNCTION(BlueprintCallable, Category = "Horovod Settings")
 	void SetChaseState(bool bEnabled);
-	
 	UFUNCTION(BlueprintCallable, Category = "Horovod Settings")
 	void RebuildSpline();
-	
 	UFUNCTION(CallInEditor, Category = "Horovod Settings")
 	void EditorRebuildSpline();
 
@@ -96,6 +93,8 @@ private:
 	
 	bool bInitializedByConvoy = false;
 
+	uint32 TimeSliceID = 0;
+	
 
 	void SpawnUnits();
 	void UpdateUnitPosition();

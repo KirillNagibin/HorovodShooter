@@ -55,6 +55,9 @@ void AHorovodManager::Tick(float DeltaTime)
 
 	if (WagonData.bIsDecorative)
 	{
+		int32 CurrentTimeSlices = FMath::Max(1, WagonData.TotalTimeSlices);
+		bool bIsBehind = false;
+		
 		if (APawn* PlayerPawn = UGameplayStatics::GetPlayerPawn(this, 0))
 		{
 			FVector PlayerLookDir = PlayerPawn->GetViewRotation().Vector();
@@ -62,6 +65,17 @@ void AHorovodManager::Tick(float DeltaTime)
 			float DotResult = FVector::DotProduct(PlayerLookDir, DirToHorovod);
 		
 			if (DotResult < -0.2f)
+			{
+				bIsBehind = true;
+			}
+		}
+		if (bIsBehind)
+		{
+			bShouldUpdatePositions = false;
+		}
+		else if (CurrentTimeSlices > 1)
+		{
+			if (GFrameCounter % CurrentTimeSlices != (TimeSliceID % CurrentTimeSlices))
 			{
 				bShouldUpdatePositions = false;
 			}
@@ -75,9 +89,10 @@ void AHorovodManager::Tick(float DeltaTime)
 
 void AHorovodManager::InitializeFromData(const FHorovodWagonData& NewData)
 {
-	
 	WagonData = NewData;
-	bInitializedByConvoy = true;
+	bInitializedByConvoy = true;	
+	
+	TimeSliceID = FMath::RandRange(0, WagonData.TotalTimeSlices - 1);
 	
 	if (ShapeGenerator)
 	{
@@ -85,9 +100,7 @@ void AHorovodManager::InitializeFromData(const FHorovodWagonData& NewData)
 		ShapeGenerator->GenerateSpline(SplineComponent);
 	}
 	SpawnUnits();
-	
 }
-
 
 
 void AHorovodManager::SetChaseState(bool bEnabled)
