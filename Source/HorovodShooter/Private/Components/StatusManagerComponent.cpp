@@ -83,7 +83,7 @@ void UStatusManagerComponent::RemoveStatus(FGameplayTag StatusTag)
 	ActiveStatuses.Remove(StatusTag);
 	if (!OwnerCharacter || !OwnerCharacter->GetCharacterMovement()) {return;}
 	
-	
+	//Remove certain tag
 	if (StatusTag.MatchesTag(FGameplayTag::RequestGameplayTag("Status.Slowed")))
 	{
 		OwnerCharacter->GetCharacterMovement()->MaxWalkSpeed = DefaultMaxWalkSpeed;
