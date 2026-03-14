@@ -28,12 +28,15 @@ public:
 	AABaseThowableItem();
 
 	virtual void Tick(float DeltaTime) override;
+	
+	UFUNCTION(BlueprintCallable, Category = "Interaction")
+	void StickOnHit(const FHitResult& Hit);
+	
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
 	
-protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	TObjectPtr<UStaticMeshComponent> ItemMesh;
 	
@@ -79,7 +82,7 @@ protected:
 	void OnProjectileStop(const FHitResult& ImpactResult);
 	UFUNCTION(BlueprintCallable)
 	void SetState(EThrowableState NewState); 
-	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Combat", meta = (Categories = "Damage"))
+	UFUNCTION(BlueprintnativeEvent, BlueprintCallable, Category = "Combat", meta = (Categories = "Damage"))
 	void HandleImpact(const FHitResult& Hit);
 	
 private:

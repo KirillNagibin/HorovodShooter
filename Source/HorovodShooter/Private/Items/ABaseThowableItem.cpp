@@ -61,6 +61,28 @@ void AABaseThowableItem::Tick(float DeltaTime)
 	}
 }
 
+void AABaseThowableItem::StickOnHit(const FHitResult& Hit)
+{	
+	if (!Hit.GetComponent()) {return;}
+	if (Hit.GetActor() == UGameplayStatics::GetPlayerPawn(this, 0))
+	{
+		return;
+	}	
+	if (ProjectileMovement)
+	{
+		ProjectileMovement->OnProjectileBounce.RemoveDynamic(this, &AABaseThowableItem::OnProjectileBounce);
+		ProjectileMovement->OnProjectileStop.RemoveDynamic(this, &AABaseThowableItem::OnProjectileStop);
+		
+		ProjectileMovement->StopMovementImmediately();
+		ProjectileMovement->Deactivate();
+		
+		ItemMesh->SetSimulatePhysics(false);
+		
+		AttachToComponent(Hit.GetComponent(), FAttachmentTransformRules::KeepWorldTransform, Hit.BoneName);
+		SetActorTickEnabled(false);
+	}
+}
+
 
 // Called when the game starts or when spawned
 void AABaseThowableItem::BeginPlay()
@@ -69,7 +91,6 @@ void AABaseThowableItem::BeginPlay()
 	SetState(EThrowableState::Loot);
 }
 
-// Called every frame
 
 void AABaseThowableItem::OnGrabbed_Implementation(USceneComponent* GrabberComponent) 
 {
@@ -99,9 +120,17 @@ void AABaseThowableItem::OnThrown_Implementation(FVector Direction, float Magnit
 
 void AABaseThowableItem::OnProjectileBounce(const FHitResult& ImpactResult, const FVector& ImpactVelocity)
 {
-	if (ProjectileMovement)
+	AActor* HitActor = ImpactResult.GetActor();
+	if (!HitActor) {return;}
+	
+
+	if (HitActor->Implements<UDamagableInterface>())
 	{
-		ProjectileMovement->OnProjectileBounce.RemoveDynamic(this, &AABaseThowableItem::OnProjectileBounce);
+		IDamagableInterface::Execute_TakeDamage(HitActor, this->DamageTags);
+	}
+	else
+	{
+		
 	}
 	HandleImpact(ImpactResult);
 }
@@ -110,9 +139,14 @@ void AABaseThowableItem::OnProjectileStop(const FHitResult& ImpactResult)
 {
 	if (ProjectileMovement)
 	{
+		ProjectileMovement->OnProjectileBounce.RemoveDynamic(this, &AABaseThowableItem::OnProjectileBounce);
 		ProjectileMovement->OnProjectileStop.RemoveDynamic(this, &AABaseThowableItem::OnProjectileStop);
 	}
 	HandleImpact(ImpactResult);
+	if (!GetRootComponent()->GetAttachParent())
+	{
+		SetState(EThrowableState::Loot);
+	}
 }
 
 void AABaseThowableItem::SetState(EThrowableState NewState)
@@ -176,15 +210,6 @@ void AABaseThowableItem::SetState(EThrowableState NewState)
 
 void AABaseThowableItem::HandleImpact_Implementation(const FHitResult& Hit)
 {
-	AActor* HitActor = Hit.GetActor();
-	if (!HitActor) {return;}
-	
-	if (HitActor->Implements<UDamagableInterface>())
-	{
-		IDamagableInterface::Execute_TakeDamage(HitActor, this->DamageTags);
-	}
-	SetState(EThrowableState::Loot);
-	
 }
 
 void AABaseThowableItem::CheckTreatedActors(float DeltaTime)
