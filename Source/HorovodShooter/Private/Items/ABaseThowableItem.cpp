@@ -12,6 +12,7 @@
 #include "Interfaces/WarningRecieverInterface.h"
 #include "Kismet/GameplayStatics.h"
 
+
 static const FName COLLISION_PHYSICS(TEXT("PhysicsActor"));
 static const FName COLLISION_BLOCK_ALL(TEXT("BlockAll"));
 
@@ -27,6 +28,7 @@ AABaseThowableItem::AABaseThowableItem()
 	RootComponent = ItemMesh;
 	ItemMesh->SetSimulatePhysics(true);
 	ItemMesh-> SetNotifyRigidBodyCollision(true);
+	ItemMesh->SetGenerateOverlapEvents(true);
 	
 	ProjectileMovement = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("ProjectileMovement"));
 	ProjectileMovement->UpdatedComponent = ItemMesh;

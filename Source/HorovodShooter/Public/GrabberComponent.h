@@ -42,6 +42,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Interaction")
 	void PrimaryAction();
 	
+	UFUNCTION(BlueprintCallable, Category = "Interaction")
+	UPrimitiveComponent* GetHeldComponent() const {return HeldComponent;}
+	
 protected:
 	//Компоненты и переменные
 	UPROPERTY()

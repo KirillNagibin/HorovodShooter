@@ -43,8 +43,6 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "State")
 	EThrowableState CurrentState = EThrowableState::Loot;
 	
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Combat")
-	FGameplayTagContainer DamageTags;
 	
 	UPROPERTY(EditDefaultsOnly, Category = "Settings")
 	bool bUsePhysicsHold = false;
@@ -63,11 +61,14 @@ protected:
 
 	
 public:
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Combat")
+	FGameplayTagContainer DamageTags;
+	
 	virtual void OnGrabbed_Implementation(USceneComponent* GrabberComponent) override;
 	virtual void OnReleased_Implementation(AActor* Releaser) override;
 	virtual void OnThrown_Implementation(FVector Direction, float Magnitude) override;
 	
-	//Геттеры
+	
 	bool UsePhysicsHold() const { return bUsePhysicsHold; }
 	bool CanBeThrownManually() const { return bCanBeThrownManually; }
 
