@@ -13,11 +13,6 @@
 #include "Kismet/GameplayStatics.h"
 
 
-static const FName COLLISION_PHYSICS(TEXT("PhysicsActor"));
-static const FName COLLISION_BLOCK_ALL(TEXT("BlockAll"));
-
-
-
 // Sets default values
 AABaseThowableItem::AABaseThowableItem()
 {
@@ -40,6 +35,12 @@ AABaseThowableItem::AABaseThowableItem()
 	ProjectileMovement->Bounciness = 0.3f;
 	
 	ProjectileMovement->bAutoActivate = false;
+}
+
+void AABaseThowableItem::BeginPlay()
+{
+	Super::BeginPlay();
+	SetState(EThrowableState::Loot);
 }
 
 void AABaseThowableItem::Tick(float DeltaTime)
@@ -81,14 +82,6 @@ void AABaseThowableItem::StickOnHit(const FHitResult& Hit)
 		AttachToComponent(Hit.GetComponent(), FAttachmentTransformRules::KeepWorldTransform, Hit.BoneName);
 		SetActorTickEnabled(false);
 	}
-}
-
-
-// Called when the game starts or when spawned
-void AABaseThowableItem::BeginPlay()
-{
-	Super::BeginPlay();
-	SetState(EThrowableState::Loot);
 }
 
 
