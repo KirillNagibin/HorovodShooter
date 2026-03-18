@@ -56,6 +56,7 @@ void AABaseThowableItem::Tick(float DeltaTime)
 			WarningCooldown = 0.0f;
 		}
 	}
+	//Проверяем если летит и запускаем прроверку
 	if (CurrentState == EThrowableState::Thrown)
 	{
 		CheckTreatedActors(DeltaTime);
@@ -64,11 +65,13 @@ void AABaseThowableItem::Tick(float DeltaTime)
 
 void AABaseThowableItem::StickOnHit(const FHitResult& Hit)
 {	
+	//Проверки
 	if (!Hit.GetComponent()) {return;}
 	if (Hit.GetActor() == UGameplayStatics::GetPlayerPawn(this, 0))
 	{
 		return;
 	}	
+	//Деактивируем объект при ударе
 	if (ProjectileMovement)
 	{
 		ProjectileMovement->OnProjectileBounce.RemoveDynamic(this, &AABaseThowableItem::OnProjectileBounce);

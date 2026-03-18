@@ -80,10 +80,10 @@ void AMainCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 
 void AMainCharacter::TakeDamage_Implementation(const FGameplayTagContainer& IncomingDamageTags)
 {
-	// 1. Если уже мертвы - игнорируем урон
+	//Если уже мертвы - игнорируем урон
 	if (bIsDead) return;
 	
-	// 2. Проверяем тэг (используем правильный синтаксис с точкой)
+	//Проверяем тэг (используем правильный синтаксис с точкой)
 	if (IncomingDamageTags.HasTag(FGameplayTag::RequestGameplayTag("Damage.Contact")))
 	{
 		bIsDead = true;
@@ -93,14 +93,14 @@ void AMainCharacter::TakeDamage_Implementation(const FGameplayTagContainer& Inco
 		}
 		UE_LOG(LogTemp, Warning, TEXT("Character: Fatal Damage Received. Calling Controller..."));
 		
-		// 3. Отключаем физику тела (это ответственность Пешки)
+		//Отключаем физику тела (это ответственность Пешки)
 		GetCharacterMovement()->StopMovementImmediately();
 		GetCharacterMovement()->DisableMovement();
 		
-		// 4. Запускаем визуал (Звук/Партиклы в Блюпринте)
+		//Запускаем визуал (Звук/Партиклы в Блюпринте)
 		OnPlayerDied();
 
-		// 5. Делегируем логику игры Контроллеру
+		//Делегируем логику игры Контроллеру
 		if (AHorovodPlayerController* PC = Cast<AHorovodPlayerController>(Controller))
 		{
 			PC->OnPawnDeath();
