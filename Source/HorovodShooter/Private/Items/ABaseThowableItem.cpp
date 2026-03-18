@@ -115,23 +115,25 @@ void AABaseThowableItem::OnThrown_Implementation(FVector Direction, float Magnit
 
 void AABaseThowableItem::OnProjectileBounce(const FHitResult& ImpactResult, const FVector& ImpactVelocity)
 {
+	//Проверки
 	AActor* HitActor = ImpactResult.GetActor();
 	if (!HitActor) {return;}
 	
-
+	//Наносим уурон
 	if (HitActor->Implements<UDamagableInterface>())
 	{
 		IDamagableInterface::Execute_TakeDamage(HitActor, this->DamageTags);
 	}
 	else
 	{
-		
+		//Для эффектов
 	}
 	HandleImpact(ImpactResult);
 }
 
 void AABaseThowableItem::OnProjectileStop(const FHitResult& ImpactResult)
 {
+	//Деактивируем предмет при остановке
 	if (ProjectileMovement)
 	{
 		ProjectileMovement->OnProjectileBounce.RemoveDynamic(this, &AABaseThowableItem::OnProjectileBounce);
