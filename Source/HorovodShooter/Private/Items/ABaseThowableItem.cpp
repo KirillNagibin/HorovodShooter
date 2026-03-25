@@ -114,16 +114,6 @@ void AABaseThowableItem::OnProjectileBounce(const FHitResult& ImpactResult, cons
 {
 	AActor* HitActor = ImpactResult.GetActor();
 	if (!HitActor) {return;}
-	
-
-	if (HitActor->Implements<UDamagableInterface>())
-	{
-		IDamagableInterface::Execute_TakeDamage(HitActor, this->DamageTags);
-	}
-	else
-	{
-		
-	}
 	HandleImpact(ImpactResult);
 }
 
@@ -206,6 +196,10 @@ void AABaseThowableItem::SetState(EThrowableState NewState)
 
 void AABaseThowableItem::HandleImpact_Implementation(const FHitResult& Hit)
 {
+	if (Hit.GetActor()->Implements<UDamagableInterface>())
+	{
+		IDamagableInterface::Execute_TakeDamage(Hit.GetActor(), this->DamageTags);
+	}
 }
 
 void AABaseThowableItem::CheckTreatedActors(float DeltaTime)
