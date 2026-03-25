@@ -148,9 +148,10 @@ void AABaseThowableItem::SetState(EThrowableState NewState)
 		SetActorTickEnabled(false);
 		break;
 	case EThrowableState::Held:
-		DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
+		
 		if (bUsePhysicsHold)
 		{
+			DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
 			ItemMesh->SetSimulatePhysics(true);
 			ItemMesh->SetEnableGravity(false);
 		}
