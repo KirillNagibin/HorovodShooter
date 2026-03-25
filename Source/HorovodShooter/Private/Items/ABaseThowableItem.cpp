@@ -56,7 +56,6 @@ void AABaseThowableItem::Tick(float DeltaTime)
 			WarningCooldown = 0.0f;
 		}
 	}
-	//Проверяем если летит и запускаем прроверку
 	if (CurrentState == EThrowableState::Thrown)
 	{
 		CheckTreatedActors(DeltaTime);
@@ -65,13 +64,11 @@ void AABaseThowableItem::Tick(float DeltaTime)
 
 void AABaseThowableItem::StickOnHit(const FHitResult& Hit)
 {	
-	//Проверки
 	if (!Hit.GetComponent()) {return;}
 	if (Hit.GetActor() == UGameplayStatics::GetPlayerPawn(this, 0))
 	{
 		return;
 	}	
-	//Деактивируем объект при ударе
 	if (ProjectileMovement)
 	{
 		ProjectileMovement->OnProjectileBounce.RemoveDynamic(this, &AABaseThowableItem::OnProjectileBounce);
@@ -115,25 +112,13 @@ void AABaseThowableItem::OnThrown_Implementation(FVector Direction, float Magnit
 
 void AABaseThowableItem::OnProjectileBounce(const FHitResult& ImpactResult, const FVector& ImpactVelocity)
 {
-	//Проверки
 	AActor* HitActor = ImpactResult.GetActor();
 	if (!HitActor) {return;}
-	
-	//Наносим уурон
-	if (HitActor->Implements<UDamagableInterface>())
-	{
-		IDamagableInterface::Execute_TakeDamage(HitActor, this->DamageTags);
-	}
-	else
-	{
-		//Для эффектов
-	}
 	HandleImpact(ImpactResult);
 }
 
 void AABaseThowableItem::OnProjectileStop(const FHitResult& ImpactResult)
 {
-	//Деактивируем предмет при остановке
 	if (ProjectileMovement)
 	{
 		ProjectileMovement->OnProjectileBounce.RemoveDynamic(this, &AABaseThowableItem::OnProjectileBounce);
@@ -211,6 +196,10 @@ void AABaseThowableItem::SetState(EThrowableState NewState)
 
 void AABaseThowableItem::HandleImpact_Implementation(const FHitResult& Hit)
 {
+	if (Hit.GetActor()->Implements<UDamagableInterface>())
+	{
+		IDamagableInterface::Execute_TakeDamage(Hit.GetActor(), this->DamageTags);
+	}
 }
 
 void AABaseThowableItem::CheckTreatedActors(float DeltaTime)
